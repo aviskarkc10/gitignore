@@ -27,7 +27,7 @@ $ gitignore python
 For additional help you can run:
 
 ```
-$ gitignore -h // or gitignore -help
+$ gitignore -h // or gitignore --help
 ```
 
 ## License
