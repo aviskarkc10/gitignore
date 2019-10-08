@@ -11,4 +11,4 @@ if [ -z "${1:-}" ]; then
 fi
 
 response="$(curl -sL https://www.gitignore.io/api/${1})"
-echo -e "# Generated using https://aviskarkc10/gitignore${response}" >> .gitignore
+echo -e "# Generated using https://aviskarkc10/gitignore${response}" > .gitignore
