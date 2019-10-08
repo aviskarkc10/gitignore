@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-if [ -z "${1:-}" ]; then
-    echo -e "Please specify the language you want to generate the .gitignore file for.\n"
+if [ -z "${1:-}" ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
+    echo -e "Generate .gitignore file for the language you prefer.\nUses https://gitignore.io\n"
     echo "Usage:"
     echo -e "  gitignore <LANGUAGE>\n"
     echo "For example:"
@@ -11,4 +11,10 @@ if [ -z "${1:-}" ]; then
 fi
 
 response="$(curl -sL https://www.gitignore.io/api/${1})"
-echo -e "# Generated using https://aviskarkc10/gitignore${response}" > .gitignore
+
+if [[ $response =~ "#!! ERROR" ]]; then
+    echo -e "Could not create .gitignore. Please make sure you entered a valid language.\nYou can view all the valid languages at:\nhttps://www.gitignore.io/api/list?format=lines"
+    exit 1
+fi
+echo "# Generated using https://aviskarkc10/gitignore${response}" > .gitignore
+echo "Successfully created .gitignore."
