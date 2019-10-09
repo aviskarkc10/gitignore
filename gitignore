@@ -6,7 +6,7 @@ if [ -z "${1:-}" ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
     echo "Usage:"
     echo -e "  gitignore <LANGUAGE>\n"
     echo "For example:"
-    echo "  gitignore python" 
+    echo "  gitignore python"
     exit 1
 fi
 
@@ -16,5 +16,6 @@ if [[ $response =~ "#!! ERROR" ]]; then
     echo -e "Could not create .gitignore. Please make sure you entered a valid language.\nYou can view all the valid languages at:\nhttps://www.gitignore.io/api/list?format=lines"
     exit 1
 fi
+
 echo "# Generated using https://aviskarkc10/gitignore${response}" > .gitignore
 echo "Successfully created .gitignore."
