@@ -1,6 +1,6 @@
 # gitignore
 
-A shell script to create gitignore files using [gitignore.io](http://gitignore.io/).
+A shell script to create gitignore files using [gitignore.io](https://gitignore.io/).
 
 ## Installation
 
