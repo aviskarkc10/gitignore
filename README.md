@@ -6,27 +6,27 @@ A shell script to create gitignore files using [gitignore.io](http://gitignore.i
 
 Run the command:
 
-```
-$ sudo curl https://raw.githubusercontent.com/aviskarkc10/gitignore/master/gitignore -o /usr/local/bin/gitignore && sudo chmod +x /usr/local/bin/gitignore
+```sh
+$ sudo curl https://raw.githubusercontent.com/aviskarkc10/gitignore/master/install.sh | bash
 ```
 
 ## Usage
 
 You can generate a `.gitignore` file by running:
 
-```
+```sh
 $ gitignore <language>
 ```
 
 For example, for `python`:
 
-```
+```sh
 $ gitignore python
 ```
 
 For additional help you can run:
 
-```
+```sh
 $ gitignore -h or gitignore --help
 ```
 
