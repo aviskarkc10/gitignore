@@ -1,5 +1,10 @@
-#! /bin/bash
+#!/usr/bin/env bash
+
+# Create directory if it doesn't exist
+if [ ! -d "$HOME/.local/bin" ]; then
+  mkdir -p $HOME/.local/bin
+fi
 
 # Download and install the script
-sudo curl https://raw.githubusercontent.com/aviskarkc10/gitignore/master/gitignore -o /usr/local/bin/gitignore && \
-sudo chmod +x /usr/local/bin/gitignore
+curl https://raw.githubusercontent.com/aviskarkc10/gitignore/master/gitignore -o $HOME/.local/bin/gitignore && \
+chmod u+x $HOME/.local/bin/gitignore
