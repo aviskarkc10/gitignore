@@ -1,21 +1,49 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-if [ -z "${1:-}" ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
-    echo -e "Generate .gitignore file for the language you prefer.\nUses https://gitignore.io\n"
+# colors
+NC='\033[0m' # No Color
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+
+
+if [ -z "${1:-}" ] || [[ ${@} =~ "," ]] || printf '%s\n' ${@} | grep -q -P '^--?h(elp)?$'
+then
+    echo "Generate .gitignore file for the language you prefer."
+    echo -e "Uses https://gitignore.io\n"
     echo "Usage:"
-    echo -e "  gitignore <LANGUAGE>\n"
+    echo -e "  gitignore <environments> \n"
     echo "For example:"
-    echo "  gitignore python"
+    echo "  gitignore macos python pycharm"
     exit 1
 fi
 
-response="$(curl -sL https://www.gitignore.io/api/${1})"
+# implode all arguments by using ',' as delimiter and remove trailing ','
+templates=$(printf '%s,' "${@}")
+response="$(curl -sL https://www.gitignore.io/api/${templates%,})"
 
-if [[ $response =~ "#!! ERROR" ]]; then
-    echo -e "Could not create .gitignore. Please make sure you entered a valid language.\nYou can view all the valid languages at:\nhttps://www.gitignore.io/api/list?format=lines"
+if [[ $response =~ "#!! ERROR" ]]
+then
+    echo -e "$RED Could not create .gitignore. Please make sure you entered a valid language.\nYou can view all the valid languages at:\nhttps://www.gitignore.io/api/list?format=lines $NC"
     exit 1
 fi
 
-echo "# Generated using https://aviskarkc10/gitignore${response}" > .gitignore
-echo "Successfully created .gitignore."
+
+# check if .gitignore file already exists
+if [ ! -f ".gitignore" ]
+then
+    echo "# Generated using https://aviskarkc10/gitignore${response}" > .gitignore
+    echo -e "$GREEN Successfully created .gitignore $NC"
+else
+    read -p "$(echo -e $RED .gitignore already exists. Do you want to prepend ? $NC)" userResponse
+    
+    if [[ $userResponse =~ ^[yY]$ ]]
+    then
+        # prepend to the exisiting .gitignore
+        echo -e "# Generated using https://aviskarkc10/gitignore${response}\n$(cat .gitignore)" > .gitignore
+        echo -e "$GREEN Successfully prepended to existing .gitignore $NC"
+    else
+        echo -e "$RED Aborting the process. $NC"
+        exit 1
+    fi
+fi
