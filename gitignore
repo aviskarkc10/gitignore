@@ -1,20 +1,19 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# colors
-NC='\033[0m' # No Color
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-
-
 if [ -z "${1:-}" ] || [[ ${@} =~ "," ]] || printf '%s\n' ${@} | grep -q -P '^--?h(elp)?$'
 then
     echo "Generate .gitignore file for the language you prefer."
     echo -e "Uses https://gitignore.io\n"
     echo "Usage:"
     echo -e "  gitignore <environments> \n"
-    echo "For example:"
-    echo "  gitignore macos python pycharm"
+    echo "Example:"
+    echo -e " for python:"
+    echo -e "  gitignore python \n"
+    echo -e " for macos, pycharm and python:"
+    echo -e "  gitignore macos python pycharm \n"
+    echo -e " for pycharm:"
+    echo -e "  gitignore pycharm \n"
     exit 1
 fi
 
@@ -24,7 +23,7 @@ response="$(curl -sL https://www.gitignore.io/api/${templates%,})"
 
 if [[ $response =~ "#!! ERROR" ]]
 then
-    echo -e "$RED Could not create .gitignore. Please make sure you entered a valid language.\nYou can view all the valid languages at:\nhttps://www.gitignore.io/api/list?format=lines $NC"
+    echo -e "Could not create .gitignore. Please make sure you entered a valid environment.\nYou can view all the valid environments at:\nhttps://www.gitignore.io/api/list?format=lines"
     exit 1
 fi
 
@@ -33,17 +32,17 @@ fi
 if [ ! -f ".gitignore" ]
 then
     echo "# Generated using https://aviskarkc10/gitignore${response}" > .gitignore
-    echo -e "$GREEN Successfully created .gitignore $NC"
+    echo "Successfully created .gitignore"
 else
-    read -p "$(echo -e $RED .gitignore already exists. Do you want to prepend ? $NC)" userResponse
+    read -p ".gitignore already exists. Do you want to prepend? " userResponse
     
     if [[ $userResponse =~ ^[yY]$ ]]
     then
         # prepend to the exisiting .gitignore
         echo -e "# Generated using https://aviskarkc10/gitignore${response}\n$(cat .gitignore)" > .gitignore
-        echo -e "$GREEN Successfully prepended to existing .gitignore $NC"
+        echo "Successfully prepended to existing .gitignore"
     else
-        echo -e "$RED Aborting the process. $NC"
+        echo "Aborting"
         exit 1
     fi
 fi
