@@ -1,21 +1,49 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-if [ -z "${1:-}" ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
-    echo -e "Generate .gitignore file for the language you prefer.\nUses https://gitignore.io\n"
+if [ -z "${1:-}" ] || [[ ${@} =~ "," ]] || printf '%s\n' ${@} | grep -q -P '^--?h(elp)?$'
+then
+    echo "Generate .gitignore file for the language you prefer."
+    echo -e "Uses https://gitignore.io\n"
     echo "Usage:"
-    echo -e "  gitignore <LANGUAGE>\n"
-    echo "For example:"
-    echo "  gitignore python"
+    echo -e "  gitignore <environments> \n"
+    echo "Example:"
+    echo -e " for python:"
+    echo -e "  gitignore python \n"
+    echo -e " for macos, pycharm and python:"
+    echo -e "  gitignore macos python pycharm \n"
+    echo -e " for pycharm:"
+    echo -e "  gitignore pycharm \n"
     exit 1
 fi
 
-response="$(curl -sL https://www.gitignore.io/api/${1})"
+# implode all arguments by using ',' as delimiter and remove trailing ','
+templates=$(printf '%s,' "${@}")
+response="$(curl -sL https://www.gitignore.io/api/${templates%,})"
 
-if [[ $response =~ "#!! ERROR" ]]; then
-    echo -e "Could not create .gitignore. Please make sure you entered a valid language.\nYou can view all the valid languages at:\nhttps://www.gitignore.io/api/list?format=lines"
+if [[ $response =~ "#!! ERROR" ]]
+then
+    echo -e "Could not create .gitignore. Please make sure you entered a valid environment.\nYou can view all the valid environments at:\nhttps://www.gitignore.io/api/list?format=lines"
     exit 1
 fi
 
-echo "# Generated using https://aviskarkc10/gitignore${response}" > .gitignore
-echo "Successfully created .gitignore."
+
+# check if .gitignore file already exists
+if [ ! -f ".gitignore" ]
+then
+    echo "# Generated using https://aviskarkc10/gitignore${response}" > .gitignore
+    echo "Successfully created .gitignore"
+else
+    read -p ".gitignore already exists. Do you want to prepend? [y/n] " userResponse
+    
+    if [[ $userResponse =~ ^[yY]$ ]]
+    then
+        # prepend to the exisiting .gitignore
+        echo -e "# Generated using https://aviskarkc10/gitignore${response}\n$(cat .gitignore)" > .gitignore
+        echo "Successfully prepended to existing .gitignore"
+    else
+        echo "Aborting"
+        exit 1
+    fi
+fi
+

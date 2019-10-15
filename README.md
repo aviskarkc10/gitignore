@@ -15,13 +15,27 @@ $ sudo curl https://raw.githubusercontent.com/aviskarkc10/gitignore/master/insta
 You can generate a `.gitignore` file by running:
 
 ```sh
-$ gitignore <language>
+$  gitignore <environments>
 ```
 
-For example, for `python`:
+**Example**
+
+- for `python`:
 
 ```sh
-$ gitignore python
+    $ gitignore python
+```
+
+- for `macos`, `pycharm` and `python`
+
+```sh
+    $ gitignore macos python pycharm
+```
+
+- for `pycharm`
+
+```sh
+    $ gitignore pycharm
 ```
 
 For additional help you can run:
