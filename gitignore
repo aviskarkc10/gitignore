@@ -34,7 +34,7 @@ then
     echo "# Generated using https://aviskarkc10/gitignore${response}" > .gitignore
     echo "Successfully created .gitignore"
 else
-    read -p ".gitignore already exists. Do you want to prepend? " userResponse
+    read -p ".gitignore already exists. Do you want to prepend? [y/n] " userResponse
     
     if [[ $userResponse =~ ^[yY]$ ]]
     then
